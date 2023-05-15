@@ -1,24 +1,61 @@
+--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-
+--         Jumpers (WIP) 2023         --
+--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-
 
--- Jumpers
+--[[
+    Gedanken:
+        - "self" benutzen?
+        - Code-Struktur so die Richtung für dich annehmbar?
+        - Gecachte Aufrufe für Lua Funktionen (gmatch=string.gmatch, random=math.random etc) nur lokal in jeder Datei wie es benötigt wird?
+        - Die Wahrscheinlichkeit das wir beide Zeug in ein und der selben Datei comitten wollen, ist bei so wenigen Dateien recht hoch.
+--]]
+
+-- Modules
+Game = require("game")
+Gui = require("gui")
+Sys = require("system")
+-- LÖVE API shortcuts ?
+LW = love.window
+LG = love.graphics
+LP = love.physics
+LA = love.audio
+LT = love.timer
+LF = love.filesystem
+LKey = love.keyboard
+LMouse = love.mouse
+LMath = love.math
+-- Default configs
+LG.setDefaultFilter("nearest", "nearest")
+
 
 function love.load()
+    Sys.log("Jumpers is getting ready!")
+    Sys.init()
+    Gui.init()
+    Game.init()
 end
 
 function love.update(dt)
+    Sys.update(dt)
+    Game.update(dt)
+    Gui.update(dt)
 end
 
 function love.draw()
-    love.graphics.print("Hello World.")
-    love.graphics.print("Hello World 2",100,100)
-    love.graphics.print("Hello World 3",100,120)
+    LG.push()
+    LG.scale(Sys.scaleX, Sys.scaleY)
+    Game.draw()
+    Gui.draw()
+    LG.pop()
+    Sys.draw()
 end
 
 function love.keypressed(key)
-    if key == "escape" then love.event.quit() end
+    Game.keypressed(key)
+    Gui.keypressed(key)
 end
 
-function love.mousepressed(x, y, button)
-end
-
-function love.quit()
+function love.mousepressed(...)
+    Game.keypressed(...)
+    Gui.keypressed(...)
 end
