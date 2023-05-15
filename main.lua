@@ -10,6 +10,7 @@ end
 function love.draw()
     love.graphics.print("Hello World.")
     love.graphics.print("Hello World 2",100,100)
+    love.graphics.print("Hello World 3",100,120)
 end
 
 function love.keypressed(key)
