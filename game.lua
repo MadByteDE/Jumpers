@@ -34,10 +34,12 @@ end
 
 -- Main callbacks
 function Game.update(dt)
+
     if Game.status == "play" then
         -- Update units
         Jumpers.update(dt)
-    end
+		Map.world:update(dt)
+	end
 end
 
 function Game.draw()

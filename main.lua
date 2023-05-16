@@ -35,6 +35,7 @@ function love.load()
     Sys.log("Jumpers is getting ready!")
     Sys.init()
     Gui.init()
+    Map.init()
     Game.init()
 end
 
