@@ -4,14 +4,19 @@
 --| System/engine functions and tools|--
 --|                                  |--
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-
-local Sys = {debugmode=true}
+local Sys = {
+debugmode=true,
+width = 1280,
+height=720,
+fullscreen=true,
+}
 
 
 -- Initialize
 function Sys.init()
     -- Window
     LW.setTitle("Jumpers!")
-    Sys.setWindowResolution(1280, 720)
+    Sys.setWindowResolution( Sys.width, Sys.height, Sys.fullscreen)
     -- Other stuff
 end
 
@@ -22,10 +27,12 @@ end
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--
 -- Public functions
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--
-function Sys.setWindowResolution(w, h)
+function Sys.setWindowResolution(w, h, fullscreen)
     Sys.width = w or Sys.width or LG.getWidth()
     Sys.height = h or Sys.height or LG.getHeight()
-    LW.setMode(Sys.width, Sys.height, {vsync=false})
+    if fullscreen == nil then fullscreen = Sys.fullscreen end
+    Sys.fullscreen = fullscreen
+    LW.setMode(Sys.width, Sys.height, {vsync=false, fullscreen=Sys.fullscreen})
     Sys.rescaleWindow()
 end
 

@@ -29,6 +29,9 @@ end
 function Gui.keypressed(key)
 end
 
+function Gui.keyreleased(key, scancode)
+end
+
 function Gui.mousepressed(x, y, button)
 end
 

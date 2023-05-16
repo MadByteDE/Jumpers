@@ -56,6 +56,11 @@ function love.keypressed(key)
     Gui.keypressed(key)
 end
 
+function love.keyreleased(key, scancode)
+    Game.keyreleased(key, scancode)
+    Gui.keyreleased(key, scancode)
+end
+
 function love.mousepressed(...)
     Game.keypressed(...)
     Gui.keypressed(...)

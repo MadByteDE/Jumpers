@@ -71,10 +71,15 @@ function Game.draw()
         drawUnits()
     end
     LG.print("I'm in the Game module & scaled!")
+    LG.rectangle ("line", 0,0, Game.width, Game.height)
 end
 
 function Game.keypressed(key)
     if key == "escape" then love.event.quit() end
+end
+
+function Game.keyreleased(key, scancode)
+	if key == "f1" then Sys.setWindowResolution (_,_, not Sys.fullscreen) end
 end
 
 function Game.mousepressed(x, y, button)
