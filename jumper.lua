@@ -1,18 +1,18 @@
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-
 --|                                  |--
---|            Jumpers.lua            |--
---|    Jumpers for a new lua file     |--
+--|            Jumper.lua            |--
+--|    Jumper for a new lua file     |--
 --|                                  |--
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-
-local Jumpers = {}
+local Jumper = {}
 
 
 -- Initialize
-function Jumpers.init()
-    Jumpers.units = {}
+function Jumper.init()
+    Jumper.units = {}
 end
 
-function Jumpers.create(x, y)
+function Jumper.create(x, y)
     local jumper = {}
     jumper.x = x
     jumper.y = y
@@ -26,10 +26,10 @@ function Jumpers.create(x, y)
     jumper.vy = 0
     jumper.maxVel = 500
     jumper.remove = false
-    jumper.body = LP.newBody(Map.world, x,y, "dynamic") 
-	jumper.shape = LP.newCircleShape(32) 
+    jumper.body = LP.newBody(Map.world, x,y, "dynamic")
+	jumper.shape = LP.newCircleShape(32)
 	jumper.fixture = LP.newFixture(jumper.body, jumper.shape)
-	table.insert(Jumpers.units, jumper)
+	table.insert(Jumper.units, jumper)
 end
 
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--
@@ -41,11 +41,11 @@ end
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--
 
 -- Main callbacks
-function Jumpers.update(dt)
-    for i=#Jumpers.units, 1, -1 do
-        local jumper = Jumpers.units[i]
+function Jumper.update(dt)
+    for i=#Jumper.units, 1, -1 do
+        local jumper = Jumper.units[i]
         -- Remove units when needed
-        if jumper.remove then table.remove(Jumpers.units, i) return end
+        if jumper.remove then table.remove(Jumper.units, i) return end
 --[[
         -- Set landed
         if jumper.y >= Game.height - jumper.height then
@@ -91,9 +91,9 @@ function Jumpers.update(dt)
     end
 end
 
-function Jumpers.draw()
-    for i=#Jumpers.units, 1, -1 do
-        local jumper = Jumpers.units[i]
+function Jumper.draw()
+    for i=#Jumper.units, 1, -1 do
+        local jumper = Jumper.units[i]
         -- Update center
         --local center = {x=jumper.x+jumper.width/2, y= jumper.y+jumper.height/2}
         local center = {x=jumper.body:getX(), y=jumper.body:getY()}
@@ -116,10 +116,10 @@ function Jumpers.draw()
     end
 end
 
-function Jumpers.keypressed(key)
+function Jumper.keypressed(key)
 end
 
-function Jumpers.mousepressed(x, y, button)
+function Jumper.mousepressed(x, y, button)
 end
 
-return Jumpers
+return Jumper

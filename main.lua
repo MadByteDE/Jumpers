@@ -1,5 +1,5 @@
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-
---         Jumpers (WIP) 2023         --
+--         Jumper (WIP) 2023         --
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-
 
 --[[
@@ -15,7 +15,7 @@ Sys = require("system")
 Gui = require("gui")
 Game = require("game")
 Map = require("map")
-Jumpers = require("jumpers")
+Jumper = require("jumper")
 
 -- LÖVE API shortcuts ?
 LW = love.window
@@ -32,7 +32,7 @@ LG.setDefaultFilter("nearest", "nearest")
 
 
 function love.load()
-    Sys.log("Jumpers is getting ready!")
+    Sys.log("Jumper is getting ready!")
     Sys.init()
     Gui.init()
     Map.init()

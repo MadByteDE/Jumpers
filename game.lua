@@ -14,9 +14,9 @@ function Game.init()
     Game.gravity = 350
     -- Get other stuff ready
     Map.init()
-    Jumpers.init()
+    Jumper.init()
     -- Create units
-    Jumpers.create(100, 100)
+    Jumper.create(100, 100)
 end
 
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--
@@ -37,7 +37,7 @@ function Game.update(dt)
 
     if Game.status == "play" then
         -- Update units
-        Jumpers.update(dt)
+        Jumper.update(dt)
 		Map.world:update(dt)
 	end
 end
@@ -45,7 +45,7 @@ end
 function Game.draw()
     if Game.status == "play" then
         -- Draw units
-        Jumpers.draw()
+        Jumper.draw()
     end
     LG.print("I'm in the Game module & scaled!")
     LG.rectangle ("line", 0,0, Game.width, Game.height)
