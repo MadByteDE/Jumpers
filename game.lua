@@ -51,6 +51,7 @@ function Game.draw()
         -- Draw units
         Jumper.draw()
     end
+    -- Screen border
     LG.rectangle ("line", 0,0, Game.width, Game.height)
 end
 

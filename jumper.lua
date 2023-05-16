@@ -67,7 +67,7 @@ function Jumper.update(dt)
         jumper.power = Sys.clamp(jumper.power, 0, 100)
         jumper.vx = Sys.clamp(jumper.vx, -jumper.maxVel, jumper.maxVel)
         jumper.vy = Sys.clamp(jumper.vy, -jumper.maxVel, jumper.maxVel)
-        
+
         -- Update position vars
 		jumper.x = jumper.body:getX()-jumper.width/2
 		jumper.y = jumper.body:getY()-jumper.height/2
@@ -85,11 +85,13 @@ function Jumper.draw()
         LG.setColor(jumper.color)
         LG.rectangle("fill", jumper.x, jumper.y, jumper.width, jumper.height)
         LG.setColor(1, 1, 1)
+
         -- Draw jump line
         local line = {}
         line.x = center.x + 16 * math.sin(jumper.angle)
         line.y = center.y + 16 * math.cos(jumper.angle)
         LG.line(center.x, center.y, line.x, line.y)
+
         -- Draw power indicator
         if jumper.power > 0 then
             local power = math.floor(jumper.power)

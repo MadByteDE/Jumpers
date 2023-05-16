@@ -3,11 +3,11 @@
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-
 
 --[[
-    Gedanken:
-        - "self" benutzen?
-        - Code-Struktur so die Richtung für dich annehmbar?
-        - Gecachte Aufrufe für Lua Funktionen (gmatch=string.gmatch, random=math.random etc) nur lokal in jeder Datei wie es benötigt wird?
-        - Die Wahrscheinlichkeit das wir beide Zeug in ein und der selben Datei comitten wollen, ist bei so wenigen Dateien recht hoch.
+    Aktuelle TODOs:
+        1. Physikwelt ausbauen (Ränder; etwas zum draufspringen bzw. drauf landen) [ALLE]
+        2. Grafikkonzept erstellen [MadByte]
+        3. Weitere TODOs absprechen und aufschreiben [ALLE]
+        4. Freistil / Kreativ werden? :'D
 --]]
 
 -- Modules
@@ -28,6 +28,7 @@ LKey = love.keyboard
 LMouse = love.mouse
 LMath = love.math
 -- Default configs
+LF.setIdentity("Jumpers")
 LG.setDefaultFilter("nearest", "nearest")
 
 
