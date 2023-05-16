@@ -14,6 +14,9 @@
 Sys = require("system")
 Gui = require("gui")
 Game = require("game")
+Map = require("map")
+Jumpers = require("jumpers")
+
 -- LÖVE API shortcuts ?
 LW = love.window
 LG = love.graphics
