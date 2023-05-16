@@ -4,14 +4,19 @@
 --|      Game systems and logic      |--
 --|                                  |--
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-
-local Game = {}
+local Game = {
+    status="play",
+    gravity=350,
+}
 
 
 -- Initialize
 function Game.init()
+    -- Set internal resolution
     Game.setGameResolution(512, 288)
-    Game.status = "play"
-    Game.gravity = 350
+    -- Create physics world
+    love.physics.setMeter(64) --the height of a meter our worlds will be 64px
+    Game.world = LP.newWorld(0, 10, true)
     -- Get other stuff ready
     Map.init()
     Jumper.init()
@@ -37,7 +42,7 @@ function Game.update(dt)
     if Game.status == "play" then
         -- Update units
         Jumper.update(dt)
-		Map.world:update(dt)
+		Game.world:update(dt)
 	end
 end
 
@@ -46,7 +51,6 @@ function Game.draw()
         -- Draw units
         Jumper.draw()
     end
-    LG.print("I'm in the Game module & scaled!")
     LG.rectangle ("line", 0,0, Game.width, Game.height)
 end
 
@@ -55,9 +59,8 @@ function Game.keypressed(key)
 end
 
 function Game.keyreleased(key, scancode)
-	if key == "f1" then
-        Sys.setWindowResolution(_, _, not Sys.fullscreen)
-    end
+	if key == "f1" then Sys.setWindowResolution(_, _, not Sys.fullscreen) end
+    if key == "r" then Game.init() end
 end
 
 function Game.mousepressed(x, y, button)
