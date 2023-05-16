@@ -33,6 +33,10 @@ function Sys.setWindowResolution(w, h, fullscreen)
     if fullscreen == nil then fullscreen = Sys.fullscreen end
     Sys.fullscreen = fullscreen
     LW.setMode(Sys.width, Sys.height, {vsync=false, fullscreen=Sys.fullscreen})
+    -- Since setMode in borderless mode will use the native desktop res instead of the set one
+    if Sys.fullscreen then
+        Sys.width, Sys.height = LG.getDimensions()
+    end
     Sys.rescaleWindow()
 end
 
