@@ -32,7 +32,7 @@ LG.setDefaultFilter("nearest", "nearest")
 
 
 function love.load()
-    Sys.log("Jumper is getting ready!")
+    Sys.log("Jumpers! is getting ready!")
     Sys.init()
     Gui.init()
     Map.init()
