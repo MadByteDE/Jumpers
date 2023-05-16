@@ -6,7 +6,7 @@
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-
 local Sys = {
 debugmode=true,
-width = 1280,
+width=1280,
 height=720,
 fullscreen=true,
 }
@@ -16,7 +16,7 @@ fullscreen=true,
 function Sys.init()
     -- Window
     LW.setTitle("Jumpers!")
-    Sys.setWindowResolution( Sys.width, Sys.height, Sys.fullscreen)
+    Sys.setWindowResolution(Sys.width, Sys.height, Sys.fullscreen)
     -- Other stuff
 end
 
@@ -33,19 +33,20 @@ function Sys.setWindowResolution(w, h, fullscreen)
     if fullscreen == nil then fullscreen = Sys.fullscreen end
     Sys.fullscreen = fullscreen
     LW.setMode(Sys.width, Sys.height, {vsync=false, fullscreen=Sys.fullscreen})
-    -- Since setMode in borderless mode will use the native desktop res instead of the set one
     Sys.rescaleWindow()
 end
 
 function Sys.rescaleWindow()
-    local w, h = Sys.width, Sys.height
+    local windowWidth, windowHeight = Sys.width, Sys.height
+    -- Borderless fullscreen maximizes the window and ignores set w, h,
+    -- so use those values for scaling!
     if Sys.fullscreen then
-        w, h = LG.getDimensions()
+        windowWidth, windowHeight = LG.getDimensions()
     end
-    local gameWidth = Game.width or w
-    local gameHeight = Game.height or h
-    Sys.scaleX = w/gameWidth
-    Sys.scaleY = h/gameHeight
+    local gameWidth = Game.width or windowWidth
+    local gameHeight = Game.height or windowHeight
+    Sys.scaleX = windowWidth/gameWidth
+    Sys.scaleY = windowHeight/gameHeight
     -- TODO: Make sure to scale at even values
 end
 
@@ -79,7 +80,7 @@ function Sys.draw()
     if Sys.debugmode then
         -- Draw debug infos / stuff here?
         local mx, my = Sys.toGameCoords(LMouse.getPosition())
-        LG.print("MX, MY: "..mx..", "..my, 10, 50)
+        LG.print("MX, MY: "..mx..", "..my, 10, 80)
     end
 end
 
