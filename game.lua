@@ -7,6 +7,7 @@
 local Game = {}
 
 
+-- Initialize
 function Game.init()
     Game.setGameResolution(512, 288)
     Game.status = "play"
@@ -15,6 +16,31 @@ function Game.init()
     Game.jumpers = {}
 end
 
+--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--
+-- Private functions
+--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--
+local function updateUnits(dt)
+    -- Jumpers
+    for i=#Game.jumpers, 1, -1 do
+        local jumper = Game.jumpers[i]
+        if jumper.remove then table.remove(Game.jumpers, i) return end
+        -- Do stuff
+    end
+    -- Other units
+end
+
+local function drawUnits()
+    -- Jumpers
+    for i=#Game.jumpers, 1, -1 do
+        local jumper = Game.jumpers[i]
+        -- Draw stuff
+    end
+    -- Other units
+end
+
+--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--
+-- Public functions
+--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--
 function Game.setGameResolution(w, h)
     Game.width = w or Game.width
     Game.height = h or Game.height
@@ -33,35 +59,16 @@ function Game.createJumper(x, y)
     table.insert(Game.jumpers, jumper)
 end
 
-function Game.updateUnits(dt)
-    -- Jumpers
-    for i=#Game.jumpers, 1, -1 do
-        local jumper = Game.jumpers[i]
-        if jumper.remove then table.remove(Game.jumpers, i) return end
-        -- Do stuff
-    end
-    -- Other units
-end
-
-function Game.drawUnits()
-    -- Jumpers
-    for i=#Game.jumpers, 1, -1 do
-        local jumper = Game.jumpers[i]
-        -- Draw stuff
-    end
-    -- Other units
-end
-
 -- Main callbacks
 function Game.update(dt)
     if Game.status == "play" then
-        Game.updateUnits(dt)
+        updateUnits(dt)
     end
 end
 
 function Game.draw()
     if Game.status == "play" then
-        Game.drawUnits()
+        drawUnits()
     end
     LG.print("I'm in the Game module & scaled!")
 end

@@ -11,9 +11,9 @@
 --]]
 
 -- Modules
-Game = require("game")
-Gui = require("gui")
 Sys = require("system")
+Gui = require("gui")
+Game = require("game")
 -- LÖVE API shortcuts ?
 LW = love.window
 LG = love.graphics
@@ -35,6 +35,7 @@ function love.load()
     Game.init()
 end
 
+-- Main callbacks
 function love.update(dt)
     Sys.update(dt)
     Game.update(dt)

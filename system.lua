@@ -7,17 +7,25 @@
 local Sys = {debugmode=true}
 
 
+-- Initialize
 function Sys.init()
     -- Window
-    Sys.setWindowResolution(1280, 720)
     LW.setTitle("Jumpers!")
-    LW.setMode(Sys.width, Sys.height, {vsync=false})
+    Sys.setWindowResolution(1280, 720)
     -- Other stuff
 end
 
+--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--
+-- Private functions
+--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--
+
+--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--
+-- Public functions
+--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--
 function Sys.setWindowResolution(w, h)
     Sys.width = w or Sys.width or LG.getWidth()
     Sys.height = h or Sys.height or LG.getHeight()
+    LW.setMode(Sys.width, Sys.height, {vsync=false})
     Sys.rescaleWindow()
 end
 
