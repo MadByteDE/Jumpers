@@ -34,7 +34,6 @@ end
 
 -- Main callbacks
 function Game.update(dt)
-
     if Game.status == "play" then
         -- Update units
         Jumper.update(dt)
@@ -56,7 +55,9 @@ function Game.keypressed(key)
 end
 
 function Game.keyreleased(key, scancode)
-	if key == "f1" then Sys.setWindowResolution (_,_, not Sys.fullscreen) end
+	if key == "f1" then
+        Sys.setWindowResolution(_, _, not Sys.fullscreen)
+    end
 end
 
 function Game.mousepressed(x, y, button)

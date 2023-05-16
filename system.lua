@@ -34,17 +34,18 @@ function Sys.setWindowResolution(w, h, fullscreen)
     Sys.fullscreen = fullscreen
     LW.setMode(Sys.width, Sys.height, {vsync=false, fullscreen=Sys.fullscreen})
     -- Since setMode in borderless mode will use the native desktop res instead of the set one
-    if Sys.fullscreen then
-        Sys.width, Sys.height = LG.getDimensions()
-    end
     Sys.rescaleWindow()
 end
 
 function Sys.rescaleWindow()
-    local gameWidth = Game.width or Sys.width
-    local gameHeight = Game.height or Sys.height
-    Sys.scaleX = Sys.width/gameWidth
-    Sys.scaleY = Sys.height/gameHeight
+    local w, h = Sys.width, Sys.height
+    if Sys.fullscreen then
+        w, h = LG.getDimensions()
+    end
+    local gameWidth = Game.width or w
+    local gameHeight = Game.height or h
+    Sys.scaleX = w/gameWidth
+    Sys.scaleY = h/gameHeight
     -- TODO: Make sure to scale at even values
 end
 
