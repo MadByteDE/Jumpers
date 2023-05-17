@@ -92,7 +92,9 @@ function Jumper.draw()
         -- Draw Jumper
         if jumper.gfx then
 			LG.setColor (1,1,1,1)
-			LG.draw (jumper.gfx.image, jumper.x, jumper.y, 0, jumper.gfx.imageScaleX, jumper.gfx.imageScaleY)
+			local stretch = (100-jumper.power*0.5)/100 --vertical shrinking, as if preparing up for jump
+			LG.draw (jumper.gfx.image, jumper.x, jumper.y+jumper.height*(1-stretch), 
+				0, jumper.gfx.imageScaleX, jumper.gfx.imageScaleY*stretch)
         else
 			LG.setColor(jumper.color)
 			LG.rectangle("fill", jumper.x, jumper.y, jumper.width, jumper.height)
