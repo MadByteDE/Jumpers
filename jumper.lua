@@ -12,12 +12,12 @@ function Jumper.init()
     Jumper.units = {}
 end
 
-function Jumper.create(x, y)
+function Jumper.create(x, y, w,h)
     local jumper = {}
     jumper.x = x
     jumper.y = y
-    jumper.width = 16
-    jumper.height = 16
+    jumper.width = w
+    jumper.height = h
     jumper.color = {1, 0, 0}
     jumper.angle = 0
     jumper.power = 0
@@ -32,6 +32,10 @@ function Jumper.create(x, y)
 	jumper.fixture:setRestitution(0) --no rebound
 	jumper.body:setFixedRotation(true)
 	jumper.body:setMass (2)
+	jumper.gfx = {}
+	jumper.gfx.image = LG.newImage("gfx/tempjumper.png")
+	jumper.gfx.imageScaleX = jumper.width / jumper.gfx.image:getWidth() 
+	jumper.gfx.imageScaleY = jumper.height / jumper.gfx.image:getHeight() 
 	table.insert(Jumper.units, jumper)
 end
 
@@ -86,15 +90,19 @@ function Jumper.draw()
 			LG.print(i..")x:y="..math.floor(center.x)..":"..math.floor(center.x), 5, 10*i)
 		end
         -- Draw Jumper
-        LG.setColor(jumper.color)
-        LG.rectangle("fill", jumper.x, jumper.y, jumper.width, jumper.height)
-        LG.setColor(1, 1, 1)
-
+        if jumper.gfx then
+			LG.setColor (1,1,1,1)
+			LG.draw (jumper.gfx.image, jumper.x, jumper.y, 0, jumper.gfx.imageScaleX, jumper.gfx.imageScaleY)
+        else
+			LG.setColor(jumper.color)
+			LG.rectangle("fill", jumper.x, jumper.y, jumper.width, jumper.height)
+			LG.setColor(1, 1, 1)
+		end
         -- Draw jump line
         local line = {}
         line.x = center.x + 16 * math.sin(jumper.angle)
-        line.y = center.y + 16 * math.cos(jumper.angle)
-        LG.line(center.x, center.y, line.x, line.y)
+        line.y = (center.y-jumper.height) + 16 * math.cos(jumper.angle)
+        LG.line(center.x, center.y-jumper.height, line.x, line.y)
 
         -- Draw power indicator
         if jumper.power > 0 then
