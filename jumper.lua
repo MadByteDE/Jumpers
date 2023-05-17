@@ -33,7 +33,7 @@ function Jumper.create(x, y, w,h)
 	jumper.body:setFixedRotation(true)
 	jumper.body:setMass (2)
 	jumper.gfx = {}
-	jumper.gfx.image = LG.newImage("gfx/tempjumper.png")
+	jumper.gfx.image = LG.newImage("gfx/jumponaut.png")
 	jumper.gfx.imageScaleX = jumper.width / jumper.gfx.image:getWidth() 
 	jumper.gfx.imageScaleY = jumper.height / jumper.gfx.image:getHeight() 
 	table.insert(Jumper.units, jumper)
