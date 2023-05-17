@@ -27,8 +27,11 @@ function Jumper.create(x, y)
     jumper.maxVel = 500
     jumper.remove = false
     jumper.body = LP.newBody(Game.world, x,y, "dynamic")
-	jumper.shape = LP.newCircleShape(32)
+	jumper.shape = LP.newRectangleShape(jumper.width, jumper.height)
 	jumper.fixture = LP.newFixture(jumper.body, jumper.shape)
+	jumper.fixture:setRestitution(0) --no rebound
+	jumper.body:setFixedRotation(true)
+	jumper.body:setMass (2)
 	table.insert(Jumper.units, jumper)
 end
 
@@ -79,8 +82,9 @@ function Jumper.draw()
         local jumper = Jumper.units[i]
         -- Update center
         local center = {x=jumper.body:getX(), y=jumper.body:getY()}
-        LG.print("center.y:"..center.y, 5, 5)
-
+        if Sys.debugmode then
+			LG.print(i..")x:y="..math.floor(center.x)..":"..math.floor(center.x), 5, 10*i)
+		end
         -- Draw Jumper
         LG.setColor(jumper.color)
         LG.rectangle("fill", jumper.x, jumper.y, jumper.width, jumper.height)

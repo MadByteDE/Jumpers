@@ -81,10 +81,31 @@ function Sys.draw()
         -- Draw debug infos / stuff here?
         local mx, my = Sys.toGameCoords(LMouse.getPosition())
         LG.print("MX, MY: "..mx..", "..my, 10, 80)
+    
+    -- draw physics bodies and their shapes
+    	LG.setColor (1, math.random(0,3)/3,1,0.5)
+    	for _, body in pairs(Game.world:getBodies()) do
+		for _, fixture in pairs(body:getFixtures()) do
+			local shape = fixture:getShape()
+			if shape:typeOf("CircleShape") then
+				local cx, cy = body:getWorldPoints(shape:getPoint())
+				love.graphics.circle("fill", cx, cy, shape:getRadius())
+			elseif shape:typeOf("PolygonShape") then
+				love.graphics.polygon("line", body:getWorldPoints(shape:getPoints()))
+			else
+				love.graphics.line(body:getWorldPoints(shape:getPoints()))
+			end
+		end
+	end
+    
     end
 end
 
 function Sys.keypressed(key)
+end
+
+function Sys.keyreleased(key)
+	if key == "tab" then Sys.debugmode = not Sys.debugmode end
 end
 
 function Sys.mousepressed(x, y, button)

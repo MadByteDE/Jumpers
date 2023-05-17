@@ -16,12 +16,14 @@ function Game.init()
     Game.setGameResolution(512, 288)
     -- Create physics world
     love.physics.setMeter(64) --the height of a meter our worlds will be 64px
-    Game.world = LP.newWorld(0, 10, true)
+    Game.world = LP.newWorld(0, 100, true)
     -- Get other stuff ready
     Map.init()
     Jumper.init()
     -- Create units
-    Jumper.create(100, 100)
+    Jumper.create(200, 200)
+    Jumper.create(100, 200)
+
 end
 
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--
@@ -47,9 +49,12 @@ function Game.update(dt)
 end
 
 function Game.draw()
-    if Game.status == "play" then
+	LG.print("TAB to toggle debug",0,Game.height-20)
+	if Game.status == "play" then
         -- Draw units
         Jumper.draw()
+        -- Draw map
+        Map.draw()
     end
     -- Screen border
     LG.rectangle ("line", 0,0, Game.width, Game.height)

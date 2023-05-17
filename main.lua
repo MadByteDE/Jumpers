@@ -36,8 +36,8 @@ function love.load()
     Sys.log("Jumpers! is getting ready!")
     Sys.init()
     Gui.init()
-    Map.init()
     Game.init()
+    Map.init()
 end
 
 -- Main callbacks
@@ -52,8 +52,8 @@ function love.draw()
     LG.scale(Sys.scaleX, Sys.scaleY)
     Game.draw()
     Gui.draw()
-    LG.pop()
     Sys.draw()
+    LG.pop()
 end
 
 function love.keypressed(key)
@@ -64,6 +64,7 @@ end
 function love.keyreleased(key, scancode)
     Game.keyreleased(key, scancode)
     Gui.keyreleased(key, scancode)
+    Sys.keyreleased(key, scancode)
 end
 
 function love.mousepressed(...)
