@@ -30,6 +30,7 @@ function Jumper.create(x, y, w,h)
 	jumper.shape = LP.newRectangleShape(jumper.width, jumper.height)
 	jumper.fixture = LP.newFixture(jumper.body, jumper.shape)
 	jumper.fixture:setRestitution(0) --no rebound
+	jumper.fixture:setFriction(0.5)
 	jumper.body:setFixedRotation(true)
 	jumper.body:setMass (2)
 	jumper.gfx = {}
@@ -61,10 +62,10 @@ function Jumper.update(dt)
 
         -- Jump on mouse press
         if LMouse.isDown(1) then
-            jumper.power = jumper.power + 50 * dt
-        elseif jumper.power > 0 then
-            local vx = (jumper.power*5) * math.sin(jumper.angle)
-            local vy = (jumper.power*5) * math.cos(jumper.angle)
+            jumper.power = jumper.power + 100 * dt
+        elseif jumper.power > 0 and Jumper.isOnGround(jumper) then
+            local vx = (jumper.power*4) * math.sin(jumper.angle)
+            local vy = (jumper.power*4) * math.cos(jumper.angle)
             jumper.body:applyLinearImpulse(vx, vy)
             jumper.power = 0
             jumper.landed = false
@@ -115,7 +116,22 @@ function Jumper.draw()
     end
 end
 
+--return true / false is Jumper is touching a wall body
+function Jumper.isOnGround (jumper)
+	for i=1,#Map.walls, 1 do
+		wall=Map.walls[i]
+		if jumper.body:isTouching (wall.body) then return true end
+	end
+	return false
+end
+
+function Jumper.setPosition (jumper,x,y)
+	jumper.body:setPosition(x,y)
+	jumper.body:setLinearVelocity(0,0)
+end
+
 function Jumper.keypressed(key)
+	if key=="space" then Jumper.setPosition (Jumper.units[1],100,180) end
 end
 
 function Jumper.mousepressed(x, y, button)

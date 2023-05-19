@@ -21,9 +21,9 @@ function Game.init()
     Map.init()
     Jumper.init()
     -- Create units
-    Jumper.create(200, 200, 4,8)
+    --Jumper.create(200, 200, 4,8)
     Jumper.create(100, 200, 8,16)
-    Jumper.create(120, 200, 16,32)
+   -- Jumper.create(120, 200, 16,32)
 
 end
 
@@ -50,7 +50,7 @@ function Game.update(dt)
 end
 
 function Game.draw()
-	LG.print("TAB to toggle debug",0,Game.height-20)
+	LG.print("TAB to toggle debug. SPACE to reset unit[1].",0,Game.height-24)
 	if Game.status == "play" then
         -- Draw units
         Jumper.draw()
@@ -68,6 +68,7 @@ end
 function Game.keyreleased(key, scancode)
 	if key == "f1" then Sys.setWindowResolution(_, _, not Sys.fullscreen) end
     if key == "r" then Game.init() end
+    Jumper.keypressed(key)
 end
 
 function Game.mousepressed(x, y, button)

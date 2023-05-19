@@ -37,7 +37,7 @@ function love.load()
     Sys.init()
     Gui.init()
     Game.init()
-    Map.init()
+    --Map.init() --already called in Game.init()
 end
 
 -- Main callbacks
