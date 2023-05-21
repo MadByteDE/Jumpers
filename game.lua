@@ -22,7 +22,7 @@ function Game.init()
     Jumper.init()
     -- Create units
     --Jumper.create(200, 200, 4,8)
-    Jumper.create(100, 200, 8,16)
+    Jumper.create(100, 200, 22,30)
    -- Jumper.create(120, 200, 16,32)
 
 end

@@ -34,7 +34,7 @@ function Jumper.create(x, y, w,h)
 	jumper.body:setFixedRotation(true)
 	jumper.body:setMass (2)
 	jumper.gfx = {}
-	jumper.gfx.image = LG.newImage("gfx/jumponaut.png")
+	jumper.gfx.image = LG.newImage("gfx/astrochar_single.png")
 	jumper.gfx.imageScaleX = jumper.width / jumper.gfx.image:getWidth() 
 	jumper.gfx.imageScaleY = jumper.height / jumper.gfx.image:getHeight() 
 	table.insert(Jumper.units, jumper)
@@ -93,9 +93,11 @@ function Jumper.draw()
         -- Draw Jumper
         if jumper.gfx then
 			LG.setColor (1,1,1,1)
-			local stretch = (100-jumper.power*0.5)/100 --vertical shrinking, as if preparing up for jump
-			LG.draw (jumper.gfx.image, jumper.x, jumper.y+jumper.height*(1-stretch), 
-				0, jumper.gfx.imageScaleX, jumper.gfx.imageScaleY*stretch)
+            local flipX = 1
+            if jumper.angle < 0 then flipX = -1 end
+			local stretch = (100-jumper.power*0.2)/100 --vertical shrinking, as if preparing up for jump
+			LG.draw (jumper.gfx.image, jumper.x+jumper.width/2, jumper.y+jumper.height*(1-stretch), 
+				0, jumper.gfx.imageScaleX*flipX, jumper.gfx.imageScaleY*stretch, jumper.width*2, 0)
         else
 			LG.setColor(jumper.color)
 			LG.rectangle("fill", jumper.x, jumper.y, jumper.width, jumper.height)
