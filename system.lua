@@ -5,7 +5,7 @@
 --|                                  |--
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-
 local Sys = {
-    debugmode=true,
+    debugmode=false,
     width=1280,
     height=720,
     fullscreen=true,

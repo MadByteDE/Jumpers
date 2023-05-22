@@ -22,7 +22,7 @@ function Game.init()
     Jumper.init()
     -- Create units
     --Jumper.create(200, 200, 4,8)
-    Jumper.create(100, 200, 22,30)
+    Jumper.create(100, 200, 14,22)
    -- Jumper.create(120, 200, 16,32)
 
 end
@@ -52,10 +52,10 @@ end
 function Game.draw()
 	LG.print("TAB to toggle debug. SPACE to reset unit[1].",0,Game.height-24)
 	if Game.status == "play" then
-        -- Draw units
-        Jumper.draw()
         -- Draw map
         Map.draw()
+        -- Draw units
+        Jumper.draw()
     end
     -- Screen border
     LG.rectangle ("line", 0,0, Game.width, Game.height)

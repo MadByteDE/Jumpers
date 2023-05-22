@@ -33,10 +33,9 @@ function Jumper.create(x, y, w,h)
 	jumper.fixture:setFriction(0.5)
 	jumper.body:setFixedRotation(true)
 	jumper.body:setMass (2)
-	jumper.gfx = {}
-	jumper.gfx.image = LG.newImage("gfx/astrochar_single.png")
-	jumper.gfx.imageScaleX = jumper.width / jumper.gfx.image:getWidth() 
-	jumper.gfx.imageScaleY = jumper.height / jumper.gfx.image:getHeight() 
+	jumper.image = LG.newImage("gfx/astrochar1_single.png")
+	-- jumper.gfx.imageScaleX = jumper.width / jumper.gfx.image:getWidth()
+	-- jumper.gfx.imageScaleY = jumper.height / jumper.gfx.image:getHeight()
 	table.insert(Jumper.units, jumper)
 end
 
@@ -87,41 +86,38 @@ function Jumper.draw()
         local jumper = Jumper.units[i]
         -- Update center
         local center = {x=jumper.body:getX(), y=jumper.body:getY()}
-        if Sys.debugmode then
-			LG.print(i..")x:y="..math.floor(center.x)..":"..math.floor(center.x), 5, 10*i)
-		end
         -- Draw Jumper
-        if jumper.gfx then
-			LG.setColor (1,1,1,1)
-            local flipX = 1
-            if jumper.angle < 0 then flipX = -1 end
-			local stretch = (100-jumper.power*0.2)/100 --vertical shrinking, as if preparing up for jump
-			LG.draw (jumper.gfx.image, jumper.x+jumper.width/2, jumper.y+jumper.height*(1-stretch), 
-				0, jumper.gfx.imageScaleX*flipX, jumper.gfx.imageScaleY*stretch, jumper.width*2, 0)
-        else
-			LG.setColor(jumper.color)
-			LG.rectangle("fill", jumper.x, jumper.y, jumper.width, jumper.height)
-			LG.setColor(1, 1, 1)
-		end
-        -- Draw jump line
-        local line = {}
-        line.x = center.x + 16 * math.sin(jumper.angle)
-        line.y = (center.y-jumper.height) + 16 * math.cos(jumper.angle)
-        LG.line(center.x, center.y-jumper.height, line.x, line.y)
+        LG.setColor (1,1,1,1)
+        local flipX = 1
+        if jumper.angle < 0 then flipX = -1 end
+        local stretch = (100-jumper.power*0.2)/100 --vertical shrinking, as if preparing up for jump
+        local iw, ih = jumper.image:getDimensions()
+        local x = jumper.x + (jumper.width/2)
+        local y = jumper.y + (jumper.height - ih) + (jumper.height * (1-stretch)) + 1
+        local kx = jumper.width/2 + 3 -- +3 muss irgendwas mit dem Verhältnis zwischen jumper w und image w zu tun haben?
+        LG.draw(jumper.image, x, y, 0, flipX, stretch, kx, 0)
 
-        -- Draw power indicator
-        if jumper.power > 0 then
-            local power = math.floor(jumper.power)
-            local x, y = jumper.x-64, jumper.y - 15
-            LG.printf(power, x, y, jumper.width+128, "center")
-        end
+        if Sys.debugmode then
+			LG.print(i..")x:y="..math.floor(center.x)..":"..math.floor(center.y), 5, 10*i)
+            -- Draw jump line
+            local line = {}
+            line.x = center.x + (8 * math.sin(jumper.angle))
+            line.y = center.y + (8 * math.cos(jumper.angle))
+            LG.line(center.x, center.y, line.x, line.y)
+            -- Draw power indicator
+            if jumper.power > 0 then
+                local power = math.floor(jumper.power)
+                local x, y = jumper.x-64, jumper.y - 15
+                LG.printf(power, x, y, jumper.width+128, "center")
+            end
+		end
     end
 end
 
 --return true / false is Jumper is touching a wall body
 function Jumper.isOnGround (jumper)
 	for i=1,#Map.walls, 1 do
-		wall=Map.walls[i]
+		local wall=Map.walls[i]
 		if jumper.body:isTouching (wall.body) then return true end
 	end
 	return false
