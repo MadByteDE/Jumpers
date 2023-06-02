@@ -12,7 +12,8 @@ function Jumper.init()
     Jumper.units = {}
 end
 
-function Jumper.create(x, y, w,h)
+function Jumper.create(x, y, w,h, parameters)
+	if not parameters then parameters = {} end
     local jumper = {}
     jumper.x = x
     jumper.y = y
@@ -34,6 +35,9 @@ function Jumper.create(x, y, w,h)
 	jumper.body:setFixedRotation(true)
 	jumper.body:setMass (2)
 	jumper.image = LG.newImage("gfx/astrochar1_single.png")
+	jumper.input = {moveLeft=false, moveRight=false, jump=false}	--this can be set by keyboard, gamepad or AI
+	jumper.keyboard = parameters.keyboard 	--keyboard config, example:  {keyboard={moveLeft="a", moveRight="d", jump="s"}
+	jumper.AI = parameters.AI
 	-- jumper.gfx.imageScaleX = jumper.width / jumper.gfx.image:getWidth()
 	-- jumper.gfx.imageScaleY = jumper.height / jumper.gfx.image:getHeight()
 	table.insert(Jumper.units, jumper)
@@ -53,7 +57,8 @@ function Jumper.update(dt)
         local jumper = Jumper.units[i]
         -- Remove units when needed
         if jumper.remove then table.remove(Jumper.units, i) return end
-
+		--[[
+		---mouse controls
         -- Calculate angle
         local center = {x=jumper.body:getX(), y=jumper.body:getY()}
         local mx, my = Sys.toGameCoords(LMouse.getPosition())
@@ -69,7 +74,46 @@ function Jumper.update(dt)
             jumper.power = 0
             jumper.landed = false
         end
+        --]]
+        --keyboard:
+        if jumper.keyboard then
+			for k,v in pairs (jumper.keyboard) do
+				jumper.input[k]  = false
+				if LKey.isDown(v) then
+				--Jumper.units[i]
+				jumper.input[k] = true
+					print ("set to true:"..k)
+				end
+				print (k,v)
+			end
+		end
+		--AI:
+		if jumper.AI then
+			jumper.input = Jumper.getAIInput(jumper)
+		end
+        
+		--input handling
+		if jumper.input.jump then
+		    jumper.power = jumper.power + 100 * dt
+		    print ("jump!" .. jumper.power)
+		elseif jumper.power > 0 and Jumper.canJump(jumper) then
+            local vx = (jumper.power*4) * math.sin(jumper.angle)
+            local vy = (jumper.power*4) * math.cos(jumper.angle)
+            jumper.body:applyLinearImpulse(vx, vy)
+            jumper.power = 0
+            jumper.landed = false			
+		end
+		if jumper.input.moveLeft and Jumper.canJump(jumper) then
+			jumper.angle = math.rad(-90)-math.rad(45)
+			jumper.body:applyLinearImpulse(-2, 0)
+			print "move left"
+		end
+		if jumper.input.moveRight and Jumper.canJump(jumper)then
+			jumper.angle = math.rad(90)+math.rad(45)
+			jumper.body:applyLinearImpulse(2, 0)
+			print "move right"
 
+		end
         -- Clamp stuff
         jumper.power = Sys.clamp(jumper.power, 0, 100)
         jumper.vx = Sys.clamp(jumper.vx, -jumper.maxVel, jumper.maxVel)
@@ -101,8 +145,8 @@ function Jumper.draw()
 			LG.print(i..")x:y="..math.floor(center.x)..":"..math.floor(center.y), 5, 10*i)
             -- Draw jump line
             local line = {}
-            line.x = center.x + (8 * math.sin(jumper.angle))
-            line.y = center.y + (8 * math.cos(jumper.angle))
+            line.x = center.x + (18 * math.sin(jumper.angle))
+            line.y = center.y + (18 * math.cos(jumper.angle))
             LG.line(center.x, center.y, line.x, line.y)
             -- Draw power indicator
             if jumper.power > 0 then
@@ -123,13 +167,52 @@ function Jumper.isOnGround (jumper)
 	return false
 end
 
+--return true / false is Jumper is allowed to jump
+--FIXME
+--this also needs to handle cases where one jumper is standing on top another jumper and not touching the ground!
+function Jumper.canJump (jumper)
+	return Jumper.isOnGround (jumper)
+end
+
 function Jumper.setPosition (jumper,x,y)
 	jumper.body:setPosition(x,y)
 	jumper.body:setLinearVelocity(0,0)
 end
 
+function Jumper.getAIInput (jumper)
+	local moveLeft, moveRight, jump = false, false, false
+	if math.sin(Game.timer) < 0 then 
+		moveLeft = true
+		moveRight = false
+	else
+		moveLeft = false
+		moveRight = true
+	end
+	if math.sin(Game.timer*3) < 0 then
+		jump = true
+	else
+		jump = false
+	end
+	return {moveLeft=moveLeft, moveRight=moveRight, jump=jump}
+end
+
 function Jumper.keypressed(key)
 	if key=="space" then Jumper.setPosition (Jumper.units[1],100,180) end
+	--[[
+	for i=#Jumper.units, 1, -1 do
+        local jumper = Jumper.units[i]
+        if jumper.keyboard then
+			for k,v in pairs (jumper.keyboard) do
+				Jumper.units[i].input[k]  = false
+				if v==key then
+				Jumper.units[i].input[k] = true
+					print ("set to true:"..k)
+				end
+				print (k,v)
+			end
+		end
+    end
+    --]]
 end
 
 function Jumper.mousepressed(x, y, button)
