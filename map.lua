@@ -32,10 +32,11 @@ end
 function Map.addWall (x,y, w,h, color)
     local newWall = {}
 	newWall.body = LP.newBody(Game.world, x, y, "static")
+	newWall.body:setUserData({type="wall"})
 	newWall.shape = LP.newRectangleShape(w, h)
 	newWall.fixture = LP.newFixture(newWall.body, newWall.shape, 1)
     newWall.color = color
-    newWall.fixture:setFriction(10)
+    --newWall.fixture:setFriction(10)
 	table.insert(Map.walls, newWall)
 end
 

@@ -30,7 +30,7 @@ function Jumper.create(x, y, w,h, parameters)
     jumper.body = LP.newBody(Game.world, x,y, "dynamic")
 	jumper.shape = LP.newRectangleShape(jumper.width, jumper.height)
 	jumper.fixture = LP.newFixture(jumper.body, jumper.shape)
-	jumper.fixture:setRestitution(0) --no rebound
+	jumper.fixture:setRestitution(0.5) --rebound
 	jumper.fixture:setFriction(0.5)
 	jumper.body:setFixedRotation(true)
 	jumper.body:setMass (2)
@@ -38,6 +38,8 @@ function Jumper.create(x, y, w,h, parameters)
 	jumper.input = {moveLeft=false, moveRight=false, jump=false}	--this can be set by keyboard, gamepad or AI
 	jumper.keyboard = parameters.keyboard 	--keyboard config, example:  {keyboard={moveLeft="a", moveRight="d", jump="s"}
 	jumper.AI = parameters.AI
+	jumper.body:setUserData({type="jumper", jumper=jumper})
+
 	-- jumper.gfx.imageScaleX = jumper.width / jumper.gfx.image:getWidth()
 	-- jumper.gfx.imageScaleY = jumper.height / jumper.gfx.image:getHeight()
 	table.insert(Jumper.units, jumper)
@@ -87,6 +89,21 @@ function Jumper.update(dt)
 				print (k,v)
 			end
 		end
+		
+		--handle contacts
+		local contacts = jumper.body:getContacts()
+		for ci=1, #contacts, 1 do
+			local contact = contacts[ci]
+			local normalX, normalY = contact:getNormal() 
+			--handle if the jumper should bounce away from this contact (for example walljump-bounce against a vertical wall)
+			--or if the jumper should come to a stop (for example landing on a horizontal wall)
+			-- if ...
+			--contact:setRestitution( 0 ) 
+			--contact:setFriction ( 999 ) end
+			jumper.normals = {}
+			jumper.normals.x, jumper.normals.y = normalX, normalY			
+		end
+		
 		--AI:
 		if jumper.AI then
 			jumper.input = Jumper.getAIInput(jumper)
@@ -154,8 +171,23 @@ function Jumper.draw()
                 local x, y = jumper.x-64, jumper.y - 15
                 LG.printf(power, x, y, jumper.width+128, "center")
             end
+            --draw collission normals
+            if jumper.normals then
+				LG.setColor (1,0,0,1)
+				LG.line (center.x,center.y, center.x+jumper.normals.x*10, center.y+jumper.normals.y*10)
+			end
 		end
     end
+end
+
+
+
+function beginContact(a, b, coll)
+	if b:getUserData() and b:getUserData().type=="jumper" then
+		a,b = b,a
+	end
+    local x,y = coll:getNormal()
+    if a.jumper then a.jumper.normals={x=x,y=y} end
 end
 
 --return true / false is Jumper is touching a wall body

@@ -18,6 +18,7 @@ function Game.init()
     -- Create physics world
     love.physics.setMeter(64) --the height of a meter our worlds will be 64px
     Game.world = LP.newWorld(0, 100, true)
+    Game.world:setCallbacks(beginContact, endContact, preSolve, postSolve)
     Game.timer = 0
     -- Get other stuff ready
     Map.init()
