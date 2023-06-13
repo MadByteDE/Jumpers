@@ -97,9 +97,15 @@ function Jumper.update(dt)
 			local normalX, normalY = contact:getNormal() 
 			--handle if the jumper should bounce away from this contact (for example walljump-bounce against a vertical wall)
 			--or if the jumper should come to a stop (for example landing on a horizontal wall)
-			-- if ...
-			--contact:setRestitution( 0 ) 
-			--contact:setFriction ( 999 ) end
+			local xs,ys = jumper.body:getLinearVelocity()
+			if ys > 20 then
+			--jumper.body:setLinearVelocity(0,0)
+				contact:setRestitution( 0 )
+				contact:setFriction ( 999 )
+			else
+				contact:setRestitution( 0.5 )
+				contact:setFriction ( 0.5 )
+			end
 			jumper.normals = {}
 			jumper.normals.x, jumper.normals.y = normalX, normalY			
 		end
@@ -121,12 +127,12 @@ function Jumper.update(dt)
             jumper.landed = false			
 		end
 		if jumper.input.moveLeft and Jumper.canJump(jumper) then
-			jumper.angle = math.rad(-90)-math.rad(45)
+			jumper.angle = math.rad(-90)-math.rad(60)
 			jumper.body:applyLinearImpulse(-2, 0)
 			print "move left"
 		end
 		if jumper.input.moveRight and Jumper.canJump(jumper)then
-			jumper.angle = math.rad(90)+math.rad(45)
+			jumper.angle = math.rad(90)+math.rad(60)
 			jumper.body:applyLinearImpulse(2, 0)
 			print "move right"
 
@@ -159,7 +165,9 @@ function Jumper.draw()
         LG.draw(jumper.image, x, y, 0, flipX, stretch, kx, 0)
 
         if Sys.debugmode then
-			LG.print(i..")x:y="..math.floor(center.x)..":"..math.floor(center.y), 5, 10*i)
+			local xs,ys = jumper.body:getLinearVelocity()
+			LG.print(i..")x:y="..math.floor(center.x)..":"..math.floor(center.y) .."\txsspeed:"..xs.." yspeed:"..ys, 5, 10*i)
+
             -- Draw jump line
             local line = {}
             line.x = center.x + (18 * math.sin(jumper.angle))

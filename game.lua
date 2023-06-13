@@ -26,9 +26,9 @@ function Game.init()
     -- Create units
     --Jumper.create(200, 200, 4,8)
 
-    Jumper.create(100, 200, 14,22, {keyboard={moveLeft="a", moveRight="d", jump="s"}})
+   -- Jumper.create(100, 200, 14,22, {keyboard={moveLeft="a", moveRight="d", jump="s"}})
     Jumper.create(100, 200, 14,22, {keyboard={moveLeft="left", moveRight="right", jump="up"}})
-    Jumper.create(300, 200, 14,22, {AI=true})
+    --Jumper.create(300, 200, 14,22, {AI=true})
 
 
    -- Jumper.create(120, 200, 16,32)
