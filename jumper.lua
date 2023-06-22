@@ -116,28 +116,42 @@ function Jumper.update(dt)
 		end
         
 		--input handling
+    		if Jumper.isOnGround(jumper) and not (jumper.input.moveRight or jumper.input.moveLeft ) then
+				local vx,vy = jumper.body:getLinearVelocity()
+				jumper.body:setLinearVelocity (0,vy) 
+			end    
+
 		if jumper.input.jump then
 		    jumper.power = jumper.power + 100 * dt
 		    print ("jump!" .. jumper.power)
 		elseif jumper.power > 0 and Jumper.canJump(jumper) then
             local vx = (jumper.power*4) * math.sin(jumper.angle)
             local vy = (jumper.power*4) * math.cos(jumper.angle)
+            local x,y = jumper.body:getPosition()
             jumper.body:applyLinearImpulse(vx, vy)
             jumper.power = 0
-            jumper.landed = false			
+            jumper.landed = false
+            jumper.body:setPosition (x,y-1) --HACK
 		end
+		
+		
+
+		
 		if jumper.input.moveLeft and Jumper.canJump(jumper) then
 			jumper.angle = math.rad(-90)-math.rad(60)
-			jumper.body:applyLinearImpulse(-2, 0)
+			local vx,vy = jumper.body:getLinearVelocity()
+			jumper.body:setLinearVelocity (-100,vy) 
+			--jumper.body:applyLinearImpulse(-2, 0)
 			print "move left"
 		end
 		if jumper.input.moveRight and Jumper.canJump(jumper)then
 			jumper.angle = math.rad(90)+math.rad(60)
-			jumper.body:applyLinearImpulse(2, 0)
+--			jumper.body:applyLinearImpulse(2, 0)
+			local vx,vy = jumper.body:getLinearVelocity()
+			jumper.body:setLinearVelocity (100,vy) 
 			print "move right"
-
 		end
-        -- Clamp stuff
+-- Clamp stuff
         jumper.power = Sys.clamp(jumper.power, 0, 100)
         jumper.vx = Sys.clamp(jumper.vx, -jumper.maxVel, jumper.maxVel)
         jumper.vy = Sys.clamp(jumper.vy, -jumper.maxVel, jumper.maxVel)
@@ -195,7 +209,7 @@ function beginContact(a, b, coll)
 		a,b = b,a
 	end
     local x,y = coll:getNormal()
-    if a.jumper then a.jumper.normals={x=x,y=y} end
+    if a.jumper then a.jumper.normals={x=x,y=y} a.jumper.landed=true end
 end
 
 --return true / false is Jumper is touching a wall body
