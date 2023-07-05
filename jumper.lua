@@ -84,9 +84,9 @@ function Jumper.update(dt)
 				if LKey.isDown(v) then
 				--Jumper.units[i]
 				jumper.input[k] = true
-					print ("set to true:"..k)
+				--	print ("set to true:"..k)
 				end
-				print (k,v)
+				--print (k,v)
 			end
 		end
 		

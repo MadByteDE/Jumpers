@@ -72,6 +72,46 @@ function Sys.log(txt, ...)
     print(prefix..string.format(txt, ...))
 end
 
+--convert table to string. print (dump(table))
+function dump(o)
+   if type(o) == 'table' then
+      local s = '{ '
+      for k,v in pairs(o) do
+         if type(k) ~= 'number' then k = '"'..k..'"' end
+         s = s .. '['..k..'] = ' .. dump(v) .. ',\n'
+      end
+      return s .. '} '
+   else
+      if type(o) == 'string' then
+		return '"'..o..'"'
+      else
+		return tostring(o)
+	  end
+   end
+end
+
+function loadTableFromFile (fn)
+	local info = love.filesystem.getInfo( fn, "file" )
+	if not info then
+		print ("file " .. (fn or "nil") "not found")
+		return 
+	end
+	local lines = {}
+	for line in love.filesystem.lines(fn) do
+		lines[#lines+1]=line
+	end
+	local s = "return " .. table.concat (lines)
+	--FIXME: https://stackoverflow.com/questions/34388285/creating-a-secure-lua-sandbox/34388499#34388499
+	local f, e = loadstring(s);
+	if f then
+		return f();
+	else
+		print (e)
+		return nil, e;
+	end;
+end
+
+
 -- Main callbacks
 function Sys.update(dt)
 end
