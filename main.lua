@@ -1,5 +1,5 @@
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-
---         Jumpers (WIP) 2023         --
+--         Balldozers (WIP) 2023         --
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-
 
 --[[
@@ -15,7 +15,11 @@ Sys = require("system")
 Gui = require("gui")
 Game = require("game")
 Map = require("map")
-Jumper = require("jumper")
+Dozer = require("dozer")
+Ball = require ("ball")
+Object = require ("object")
+require "anifx"
+
 
 -- LÖVE API shortcuts ?
 LW = love.window
@@ -28,12 +32,12 @@ LKey = love.keyboard
 LMouse = love.mouse
 LMath = love.math
 -- Default configs
-LF.setIdentity("Jumpers")
+LF.setIdentity("Dozers")
 LG.setDefaultFilter("nearest", "nearest")
 
 
 function love.load()
-    Sys.log("Jumpers! is getting ready!")
+    Sys.log("Dozers! is getting ready!")
     Sys.init()
     Gui.init()
     Game.init()

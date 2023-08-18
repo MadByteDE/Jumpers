@@ -6,8 +6,8 @@
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-
 local Sys = {
     debugmode=false,
-    width=1280,
-    height=720,
+    width=1280/20,
+    height=720/20,
     fullscreen=true,
 }
 
@@ -15,7 +15,7 @@ local Sys = {
 -- Initialize
 function Sys.init()
     -- Window
-    LW.setTitle("Jumpers!")
+    LW.setTitle("Dozers!")
     Sys.setWindowResolution(Sys.width, Sys.height, Sys.fullscreen)
     -- Other stuff
 end
@@ -121,24 +121,53 @@ function Sys.draw()
         -- Draw debug infos / stuff here?
         local mx, my = Sys.toGameCoords(LMouse.getPosition())
         LG.print("MX, MY: "..mx..", "..my, 10, 80)
-    
+		LG.print ("FPS:"..love.timer.getFPS(),10,100)
+--    if true then return end
     -- draw physics bodies and their shapes
-    	LG.setColor (1, math.random(0,3)/3,1,0.5)
     	for _, body in pairs(Game.world:getBodies()) do
-		for _, fixture in pairs(body:getFixtures()) do
-			local shape = fixture:getShape()
-			if shape:typeOf("CircleShape") then
-				local cx, cy = body:getWorldPoints(shape:getPoint())
-				love.graphics.circle("fill", cx, cy, shape:getRadius())
-			elseif shape:typeOf("PolygonShape") then
-				love.graphics.polygon("line", body:getWorldPoints(shape:getPoints()))
-			else
-				love.graphics.line(body:getWorldPoints(shape:getPoints()))
+			for _, fixture in pairs(body:getFixtures()) do
+			    LG.setColor (1, math.random(0,3)/3,1,0.5)
+
+				local shape = fixture:getShape()
+				if shape:typeOf("CircleShape") then
+					local cx, cy = body:getWorldPoints(shape:getPoint())
+					love.graphics.circle("fill", cx, cy, shape:getRadius())
+				elseif shape:typeOf("PolygonShape") then
+					love.graphics.polygon("line", body:getWorldPoints(shape:getPoints()))
+				else
+					love.graphics.line(body:getWorldPoints(shape:getPoints()))
+				end
+			end
+			LG.setColor(0,1,0,1)
+			local contacts = body:getContacts( )
+			for i=1,#contacts do
+				local x1,y1,x2,y2 = contacts[i]:getPositions()
+				if (x1) then
+					LG.circle ("fill",x1,y1,6,3)
+				end
+				if (x2) then
+					LG.circle ("fill",x2,y2,6,3)
+				end
+			end
+		
+	
+		end
+    --draw contacts
+		LG.setColor(255,0,0,255)
+		local contacts = Game.world.getContacts and Game.world:getContacts() or Game.world:getContactList()
+		for i=1,#contacts do
+			local x1,y1,x2,y2 = contacts[i]:getPositions()
+			if (x1) then
+				LG.circle ("fill",x1,y1,6,4)
+			end
+			if (x2) then
+				LG.circle ("fill",x2,y2,6,4)
 			end
 		end
-	end
-    
+    LG.setColor (1,1,1,1)
+
     end
+
 end
 
 function Sys.keypressed(key)

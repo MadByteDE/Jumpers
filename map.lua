@@ -20,10 +20,19 @@ function Map.init()
 	Map.addCircleWall (450,150,40,{0.4,0.8,0,1})
 	-- Map.addWall (80,200,40,5, {0.2,0.7,0,1})
 	Map.addWall (0,200,40,150, {0.2,0.7,0,1})
-	Map.addBall (398,10,5, {0,0,1,1})
-	Map.addBall (200,100,10, {1,0,0,1})
 	--]]
+
+	
 	Map.loadMap ("maps/platforms.map")
+	----[[
+	--Map.addBall (398,10,5, {0,0,1,1})
+	for y=0,100,10 do
+	for x=0,150,10 do
+	Ball.create (200+x,100+y ,{r=math.random(3,10),color={1,0.4,0,1}})
+	--Map.addBall (200+x+5,100+y,math.random(3,10), {0,0.4,1,1})
+	end
+	end
+	---]]
 end
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--
 -- Private functions
@@ -38,7 +47,7 @@ function Map.loadMap (fn)
 	end
 	Map.walls = {}
 	local loadT = loadTableFromFile(fn)
---	mapInfo = loadT.mapInfo --irrelevant for Jumpers
+--	mapInfo = loadT.mapInfo --irrelevant for Dozers
 	for wi=1, #loadT.walls, 1 do
 		--HACK to load Astrodingens maps (they use 1024*768 coordinates system)
 		local ratioX = 1024 / Game.width
@@ -50,7 +59,7 @@ function Map.loadMap (fn)
 		Map.addPolygonWall (loadT.walls[wi])
 		--print (dump (loadT.walls[wi]))
 	end
---	game_playerspawnpoints = loadT.playerspawnpoints or {x=res_w/2, y=res_h/2} --irrelevant for Jumpers 
+--	game_playerspawnpoints = loadT.playerspawnpoints or {x=res_w/2, y=res_h/2} --irrelevant for Dozers 
 end
 
 
@@ -119,7 +128,9 @@ function Map.addBall (x,y,r, color)
 	newWall.shape = LP.newCircleShape(r)
 	newWall.fixture = LP.newFixture(newWall.body, newWall.shape, 1)
     newWall.fixture:setFriction(0.1)
-   newWall.fixture:setRestitution(0.6)
+	newWall.fixture:setRestitution(0.6)
+	newWall.body:setLinearDamping(5)
+	newWall.body:setAngularDamping(0.5)
 	newWall.color = color
 	table.insert(Map.walls, newWall)
 end

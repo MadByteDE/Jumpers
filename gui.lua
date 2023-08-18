@@ -24,6 +24,11 @@ function Gui.update(dt)
 end
 
 function Gui.draw()
+	LG.setColor (0,0,0,1)
+	LG.print ("time remaining:"..math.floor(Game.timeLimit-Game.timer).."s",10,0)
+	LG.print ("Score:"..Game.score or 0,10,10)
+	LG.print ("High Score:"..Game.highScore or "---",10,20)
+	LG.print ("r=restart TAB=debug",350,0)
 end
 
 function Gui.keypressed(key)
