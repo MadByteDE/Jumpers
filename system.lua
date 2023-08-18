@@ -6,9 +6,9 @@
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-
 local Sys = {
     debugmode=false,
-    width=1280/20,
-    height=720/20,
-    fullscreen=true,
+    width=1280/2,
+    height=720/2,
+    fullscreen=false,
 }
 
 

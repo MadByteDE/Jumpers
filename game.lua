@@ -38,10 +38,14 @@ function Game.init()
 	Ball.create (250,100, {r=10, color={0,0,1,1}})
 	Ball.create (250,150, {r=15, color={0,0,1,1}})
 	Ball.create (250,200, {r=20, color={0,0,1,1}})
+	Ball.addBall (20,20,2,5)
 	Object.create (150,20, "targetarea", {shape=LP.newPolygonShape(0,0, 50,50, 100,150, 40,50, 0,100)})
 
 	Object.create (100,100, "hole", {shape=LP.newPolygonShape(10,10, 50,50, 40,10, 40,50)})
-	Object.create (400,150, "hole", {shape=LP.newPolygonShape(10,10, 20,10, 50,50, 60,20, 15,50)})
+	Object.create (440,150, "converter", {shape=LP.newPolygonShape(-20,-20,  20,-20,  20,20, -20,20), inputMaterial=1, outputMaterial=2, outputFactor=1, outputr=6, convertTime=0.2, outputOffset={x=0,y=-25}})
+	Object.create (50,100, "converter", {shape=LP.newPolygonShape(-20,-20,  20,-20,  20,20, -20,20), inputMaterial=1, outputMaterial=2, outputFactor=1, outputr=20, convertTime=5, outputOffset={x=0,y=25}})
+
+	Object.create (100,50, "converter", {shape=LP.newPolygonShape(-10,-20,  10,-20,  10,20, -20,20), inputMaterial=1, outputMaterial=1, outputFactor=1, outputr=4, convertTime=1, outputOffset={x=30,y=0}})
 
 	
 	Game.groundCanvas = LG.newCanvas (512,288)
@@ -69,11 +73,11 @@ function Game.update(dt)
     	Game.world:update(dt)
         Dozer.update(dt)
 		Ball.update(dt)
-	
+		Object.update(dt)
 		--Game.CalculateScore()
 		--update particle animations
 		aniFx.update ()
-	if Game.timer > Game.timeLimit then Game.GameOver() end
+	if Game.timer > Game.timeLimit then Game.gameOver() end
 	end
 end
 
@@ -121,7 +125,7 @@ end
 function Game.mousepressed(x, y, button)
 end
 
-function Game.GameOver()
+function Game.gameOver()
 	Game.status = "gameover"
 	if Game.score > Game.highScore then Game.highScore = Game.score end 
 end
@@ -136,25 +140,22 @@ function beginContact(a, b, coll)
 		a,b = b,a
 		aud,bud=bud,aud
 	end--]]
-	if bud.type=="targetarea" or bud.type=="hole" then
-		a,b = b,a --targetarea: is always 'a' 
+	if bud.type=="targetarea" or bud.type=="hole" or bud.type =="converter" then
+		a,b = b,a --those objects are always 'a' and balls are always 'b' 
 		aud,bud=bud,aud
 	end
 
-	if aud.type == "hole" and bud.type=="ball" then
-		print "beginContact: ball & hole"
-			Ball.setRemove(bud.ball.i)
-			Game.score=Game.score+(bud.ball.points or 1)
-			local x,y = bud.ball.body:getPosition()
-			aniFx.add ({x=x,y=y, color={0.4,0.4,0.4,0.5},duration=math.random(1,10), f_update = aniFx.update_expandExplosion, f_draw=aniFx.draw_expandExplosion, drawType="arcs",expandSpeed=math.random(5,10)}) 
-
+		--if aud.type == "hole" and bud.type=="ball" then
+		if bud.type=="ball" and aud.object and aud.object.ballContactFunction then
+			print "beginContact: ball &  aud.objectt with aud.object.ballContactFunction"
+				aud.object:ballContactFunction (bud.ball)
 		end
-
+		
 --   local x,y = coll:getNormal()
 --    if a.dozer then a.dozer.normals={x=x,y=y} a.dozer.landed=true end
 end
 
-function Game.CalculateScore()
+function Game.calculateScore()
 	Game.score = 0
 	for i=#Object.units, 1, -1 do
 		local object = Object.units[i]

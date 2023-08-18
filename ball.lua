@@ -5,7 +5,12 @@
 --|                 	               |--
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-
 local Ball = {}
-
+local BallMaterials =
+	{
+	[1] = {name="Rock", density=1.0, worth = 1.0, color={0.5,0.5,0.5,1} },
+	[2] = {name="Crushed Rock", density=3, worth = 2, color={0,1,0.5,1}},
+	
+	}
 
 -- Initialize
 function Ball.init()
@@ -22,19 +27,32 @@ function Ball.create (x,y, parameters)
     if not parameters then parameters = {} end
     local newBall = {}
 	newBall.body = LP.newBody(Game.world, x, y, "dynamic")
-	newBall.shape = LP.newCircleShape(parameters.r or 10)
-	newBall.fixture = LP.newFixture(newBall.body, newBall.shape, 1)
+	newBall.r = parameters.r or 10
+	newBall.shape = LP.newCircleShape(newBall.r)
+	newBall.fixture = LP.newFixture(newBall.body, newBall.shape, parameters.density or 1)
     newBall.fixture:setFriction(0.1)
 	newBall.fixture:setRestitution(0.6)
 	newBall.body:setLinearDamping(5)
 	newBall.body:setAngularDamping(0.5)
 	newBall.color = parameters.color or {1,0,0,1}
 	newBall.remove = false
-	newBall.points = parameters.r or 1
+	newBall.points = parameters.points or newBall.r
+	newBall.material = parameters.material or 1
 	newBall.fixture:setUserData({type="ball", ball=newBall})
 	table.insert(Ball.units, newBall)
 end
 
+function Ball.addBall (x,y, material, r)
+	local m = BallMaterials[material] or {}
+	local parameters = {
+		r = r,
+		density = m.density or 1,
+		color = m.color or {1,0,1,1},
+		points = r * (m.worth or 1),
+		material = material,
+	}
+	Ball.create (x,y,parameters)
+end
 --^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^--
 
 
@@ -76,6 +94,9 @@ function Ball.draw()
 		end
 		if shapeType == "PolygonShape" then
 			LG.polygon("fill", ball.body:getWorldPoints(ball.shape:getPoints()))
+		end
+		if Sys.debugmode then
+			LG.print ("r="..ball.r,x,y)
 		end
 	end
 end
